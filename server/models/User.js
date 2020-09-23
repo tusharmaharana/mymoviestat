@@ -12,8 +12,8 @@ const User = mongoose.model(
       required: true,
       trim: true,
     },
-    email: { type: String, default: "" },
-    password: { type: String, minlength: 8 },
+    email: { type: String, minlength: 5, maxlength: 255, default: "" },
+    password: { type: String, minlength: 8, maxlength: 255 },
   })
 );
 
