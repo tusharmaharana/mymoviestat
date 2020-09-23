@@ -1,7 +1,9 @@
 const passport = require("passport");
 const User = require("../models/User");
-const GoogleStratergy = require("passport-google-oauth20").Strategy;
-const FacebookStratergy = require("passport-facebook").Strategy;
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const FacebookStrategy = require("passport-facebook").Strategy;
+const LocalStrategy = require("passport-local").Strategy;
+const bcrypt = require("bcrypt");
 const keys = require("../config/keys");
 
 passport.serializeUser((user, done) => {
@@ -15,7 +17,7 @@ passport.deserializeUser((id, done) => {
 });
 
 passport.use(
-  new GoogleStratergy(
+  new GoogleStrategy(
     {
       clientID: keys.googleClientId,
       clientSecret: keys.googleClientSecret,
@@ -44,7 +46,7 @@ passport.use(
 );
 
 passport.use(
-  new FacebookStratergy(
+  new FacebookStrategy(
     {
       clientID: keys.facebookAppId,
       clientSecret: keys.facebookAppSecret,
@@ -68,6 +70,57 @@ passport.use(
           email: profile.emails[0].value,
         }).save();
         done(null, user);
+      }
+    }
+  )
+);
+
+passport.use(
+  "signup",
+  new LocalStrategy(
+    {
+      usernameField: "email",
+      passwordField: "password",
+      passReqToCallback: true,
+    },
+    async (req, email, password, done) => {
+      const existingUser = await User.findOne({ email });
+      if (existingUser)
+        return done(null, false, { message: "This email-id is already taken" });
+      else {
+        const { name } = req.body;
+        const user = await new User({ name, email, password });
+
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(user.password, salt);
+
+        await user.save();
+
+        done(null, user);
+      }
+    }
+  )
+);
+
+passport.use(
+  new LocalStrategy(
+    {
+      usernameField: "email",
+      passReqToCallback: true,
+    },
+    async (req, email, password, done) => {
+      try {
+        const user = await User.findOne({ email });
+        if (!user)
+          return done(null, false, { message: "Invalid Email or Password" });
+
+        const validPassword = bcrypt.compare(password, user.password);
+        if (!validPassword)
+          return done(null, false, { message: "Invalid Email or Password" });
+
+        done(null, user);
+      } catch (err) {
+        done(err);
       }
     }
   )
