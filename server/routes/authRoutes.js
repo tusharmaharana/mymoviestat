@@ -1,7 +1,7 @@
-const express = require("express");
+const { Router } = require("express");
 const passport = require("passport");
 
-const router = express.Router();
+const router = Router();
 
 router.get(
   "/auth/google",
@@ -10,7 +10,13 @@ router.get(
   })
 );
 
-router.get("/auth/google/callback", passport.authenticate("google"));
+router.get(
+  "/auth/google/callback",
+  passport.authenticate("google", {
+    successRedirect: "/",
+    failureRedirect: "/login",
+  })
+);
 
 router.get(
   "/auth/facebook",
@@ -29,6 +35,7 @@ router.get(
 
 router.get("/api/logout", (req, res) => {
   req.logOut();
+  res.redirect("/");
 });
 
 module.exports = router;

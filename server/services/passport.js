@@ -1,10 +1,8 @@
 const passport = require("passport");
-const mongoose = require("mongoose");
+const User = require("../models/User");
 const GoogleStratergy = require("passport-google-oauth20").Strategy;
-const FacebookStratergy = require("passport-facebook");
+const FacebookStratergy = require("passport-facebook").Strategy;
 const keys = require("../config/keys");
-
-const User = mongoose.model("users");
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -24,7 +22,7 @@ passport.use(
       callbackURL: "/auth/google/callback",
     },
     async (accessToken, refreshToken, profile, done) => {
-      const existingUser = await User.findOne({
+      let existingUser = await User.findOne({
         email: profile.emails[0].value,
       });
       if (existingUser) {
@@ -54,7 +52,7 @@ passport.use(
       profileFields: ["id", "displayName", "photos", "emails"],
     },
     async (accessToken, refreshToken, profile, done) => {
-      const existingUser = await User.findOne({
+      let existingUser = await User.findOne({
         $or: [{ email: profile.emails[0].value }, { facebookId: profile.id }],
       });
       if (existingUser) {
