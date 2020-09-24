@@ -2,8 +2,16 @@ const { Router } = require("express");
 const passport = require("passport");
 const validate = require("../middleware/validation");
 const { signinSchema, signupSchema } = require("../config/yup");
+const { forbidAuth, ensureAuth } = require("../middleware/inspectAuth");
 
 const router = Router();
+
+router.get("/signOut", ensureAuth, (req, res) => {
+  req.logOut();
+  res.redirect("/");
+});
+
+router.use(forbidAuth);
 
 router.get(
   "/google",
@@ -16,7 +24,7 @@ router.get(
   "/google/callback",
   passport.authenticate("google", {
     successRedirect: "/",
-    failureRedirect: "/login",
+    failureRedirect: "/",
   })
 );
 
@@ -31,7 +39,7 @@ router.get(
   "/facebook/callback",
   passport.authenticate("facebook", {
     successRedirect: "/",
-    failureRedirect: "/login",
+    failureRedirect: "/",
   })
 );
 
@@ -40,7 +48,7 @@ router.post(
   validate(signupSchema),
   passport.authenticate("signup", {
     successRedirect: "/",
-    failureRedirect: "/signup",
+    failureRedirect: "/signUp",
   })
 );
 
@@ -49,13 +57,8 @@ router.post(
   validate(signinSchema),
   passport.authenticate("local", {
     successRedirect: "/",
-    failureRedirect: "/signin",
+    failureRedirect: "/signIn",
   })
 );
-
-router.get("/signOut", (req, res) => {
-  req.logOut();
-  res.redirect("/");
-});
 
 module.exports = router;
