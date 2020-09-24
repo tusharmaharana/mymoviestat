@@ -21,7 +21,7 @@ passport.use(
     {
       clientID: keys.googleClientId,
       clientSecret: keys.googleClientSecret,
-      callbackURL: "/auth/google/callback",
+      callbackURL: "/api/auth/google/callback",
     },
     async (accessToken, refreshToken, profile, done) => {
       let existingUser = await User.findOne({
@@ -50,7 +50,7 @@ passport.use(
     {
       clientID: keys.facebookAppId,
       clientSecret: keys.facebookAppSecret,
-      callbackURL: "/auth/facebook/callback",
+      callbackURL: "/api/auth/facebook/callback",
       profileFields: ["id", "displayName", "photos", "emails"],
     },
     async (accessToken, refreshToken, profile, done) => {

@@ -6,14 +6,14 @@ const { signinSchema, signupSchema } = require("../config/yup");
 const router = Router();
 
 router.get(
-  "/auth/google",
+  "/google",
   passport.authenticate("google", {
     scope: ["profile", "email"],
   })
 );
 
 router.get(
-  "/auth/google/callback",
+  "/google/callback",
   passport.authenticate("google", {
     successRedirect: "/",
     failureRedirect: "/login",
@@ -21,14 +21,14 @@ router.get(
 );
 
 router.get(
-  "/auth/facebook",
+  "/facebook",
   passport.authenticate("facebook", {
     scope: ["email"],
   })
 );
 
 router.get(
-  "/auth/facebook/callback",
+  "/facebook/callback",
   passport.authenticate("facebook", {
     successRedirect: "/",
     failureRedirect: "/login",
@@ -36,7 +36,7 @@ router.get(
 );
 
 router.post(
-  "/user/signup",
+  "/signUp",
   validate(signupSchema),
   passport.authenticate("signup", {
     successRedirect: "/",
@@ -45,7 +45,7 @@ router.post(
 );
 
 router.post(
-  "/user/signin",
+  "/signIn",
   validate(signinSchema),
   passport.authenticate("local", {
     successRedirect: "/",
@@ -53,13 +53,9 @@ router.post(
   })
 );
 
-router.get("/api/logout", (req, res) => {
+router.get("/signOut", (req, res) => {
   req.logOut();
   res.redirect("/");
-});
-
-router.get("/api/detail", (req, res) => {
-  res.send(req.user);
 });
 
 module.exports = router;
