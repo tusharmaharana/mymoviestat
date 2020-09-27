@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import passport from 'passport';
 import keys from './config/keys';
 import authRoutes from './routes/authRoutes';
+import './services/passport';
 
 const app = express();
 
@@ -28,8 +29,8 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(json());
-app.use(_urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/auth', authRoutes);
 app.get('/api/me', (req, res) => {
