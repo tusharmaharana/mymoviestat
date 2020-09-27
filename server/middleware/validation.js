@@ -1,4 +1,4 @@
-const validate = (schema) => {
+export const validate = schema => {
   return async (req, res, next) => {
     try {
       const body = await schema.validate(req.body);
@@ -9,5 +9,3 @@ const validate = (schema) => {
     }
   };
 };
-
-module.exports = validate;

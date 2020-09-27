@@ -1,11 +1,9 @@
-const { urlencoded } = require("express");
-const express = require("express");
-const mongoose = require("mongoose");
-const cookieSession = require("cookie-session");
-const keys = require("./config/keys");
-const passport = require("passport");
-const authRoutes = require("./routes/authRoutes");
-require("./services/passport");
+import express from 'express';
+import mongoose from 'mongoose';
+import cookieSession from 'cookie-session';
+import keys from './config/keys';
+import passport from 'passport';
+import authRoutes from './routes/authRoutes';
 
 const app = express();
 
@@ -13,17 +11,17 @@ mongoose
   .connect(keys.dbHost, {
     useNewUrlParser: true,
     useCreateIndex: true,
-    useUnifiedTopology: true,
+    useUnifiedTopology: true
   })
-  .then(() => console.log("Connected to DB"))
-  .catch((err) => console.log("Couldn't connect...", err));
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.log('Error while connecting to MongoDB', err));
 
-app.set("trust proxy", 1);
+app.set('trust proxy', 1);
 
 app.use(
   cookieSession({
     maxAge: 30 * 24 * 60 * 60 * 1000,
-    keys: [keys.cookieKey],
+    keys: [keys.cookieKey]
   })
 );
 
@@ -33,10 +31,9 @@ app.use(passport.session());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api/auth", authRoutes);
-app.get("/api/detail", (req, res) => {
+app.use('/api/auth', authRoutes);
+app.get('/api/me', (req, res) => {
   res.send(req.user);
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
+app.listen(keys.port, () => console.log(`Listening on PORT ${keys.port}`));
