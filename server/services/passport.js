@@ -1,10 +1,10 @@
-import passport from 'passport';
-import User from '../models/User';
-import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-import { Strategy as FacebookStrategy } from 'passport-facebook';
-import { Strategy as LocalStrategy } from 'passport-local';
 import bcrypt from 'bcrypt';
+import passport from 'passport';
+import { Strategy as FacebookStrategy } from 'passport-facebook';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import { Strategy as LocalStrategy } from 'passport-local';
 import keys from '../config/keys';
+import User from '../models/User';
 
 passport.serializeUser((user, done) => {
   done(null, user.id);

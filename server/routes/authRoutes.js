@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import passport from 'passport';
+import { ensureAuth, forbidAuth, validate } from '../middleware';
 import { signinSchema, signupSchema } from '../services/yup';
-import { forbidAuth, ensureAuth, validate } from '../middleware';
 
 const router = Router();
 
