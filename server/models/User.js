@@ -1,8 +1,8 @@
-const mongoose = require("mongoose");
+import { model, Schema } from 'mongoose';
 
-const User = mongoose.model(
-  "users",
-  new mongoose.Schema({
+const User = model(
+  'users',
+  new Schema({
     googleId: String,
     facebookId: String,
     name: {
@@ -10,11 +10,11 @@ const User = mongoose.model(
       minlength: 3,
       maxlength: 50,
       required: true,
-      trim: true,
+      trim: true
     },
-    email: { type: String, minlength: 5, maxlength: 255, default: "" },
-    password: { type: String, minlength: 8, maxlength: 255 },
+    email: { type: String, minlength: 5 },
+    password: { type: String, minlength: 8, maxlength: 255 }
   })
 );
 
-module.exports = User;
+export default User;

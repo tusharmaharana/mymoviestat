@@ -1,10 +1,10 @@
-const passport = require("passport");
-const User = require("../models/User");
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const FacebookStrategy = require("passport-facebook").Strategy;
-const LocalStrategy = require("passport-local").Strategy;
-const bcrypt = require("bcrypt");
-const keys = require("../config/keys");
+import passport from 'passport';
+import User from '../models/User';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import { Strategy as FacebookStrategy } from 'passport-facebook';
+import { Strategy as LocalStrategy } from 'passport-local';
+import bcrypt from 'bcrypt';
+import keys from '../config/keys';
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -12,8 +12,8 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser((id, done) => {
   User.findById(id)
-    .then((user) => done(null, user))
-    .catch((err) => done(err, user));
+    .then(user => done(null, user))
+    .catch(err => done(err, user));
 });
 
 passport.use(
@@ -21,23 +21,20 @@ passport.use(
     {
       clientID: keys.googleClientId,
       clientSecret: keys.googleClientSecret,
-      callbackURL: "/api/auth/google/callback",
+      callbackURL: '/api/auth/google/callback'
     },
-    async (accessToken, refreshToken, profile, done) => {
+    async (_, __, profile, done) => {
       let existingUser = await User.findOne({
-        email: profile.emails[0].value,
+        email: profile.emails[0].value
       });
       if (existingUser) {
-        if (!existingUser.googleId)
-          existingUser = await existingUser
-            .set({ googleId: profile.id })
-            .save();
+        if (!existingUser.googleId) existingUser = await existingUser.set({ googleId: profile.id }).save();
         done(null, existingUser);
       } else {
         const user = await new User({
           googleId: profile.id,
           name: profile.displayName,
-          email: profile.emails[0].value,
+          email: profile.emails[0].value
         }).save();
         done(null, user);
       }
@@ -50,24 +47,21 @@ passport.use(
     {
       clientID: keys.facebookAppId,
       clientSecret: keys.facebookAppSecret,
-      callbackURL: "/api/auth/facebook/callback",
-      profileFields: ["id", "displayName", "photos", "emails"],
+      callbackURL: '/api/auth/facebook/callback',
+      profileFields: ['id', 'displayName', 'photos', 'emails']
     },
-    async (accessToken, refreshToken, profile, done) => {
+    async (_, __, profile, done) => {
       let existingUser = await User.findOne({
-        $or: [{ email: profile.emails[0].value }, { facebookId: profile.id }],
+        $or: [{ email: profile.emails[0].value }, { facebookId: profile.id }]
       });
       if (existingUser) {
-        if (!existingUser.facebookId)
-          existingUser = await existingUser
-            .set({ facebookId: profile.id })
-            .save();
+        if (!existingUser.facebookId) existingUser = await existingUser.set({ facebookId: profile.id }).save();
         done(null, existingUser);
       } else {
         const user = await new User({
           facebookId: profile.id,
           name: profile.displayName,
-          email: profile.emails[0].value,
+          email: profile.emails[0].value
         }).save();
         done(null, user);
       }
@@ -76,17 +70,16 @@ passport.use(
 );
 
 passport.use(
-  "signup",
+  'signup',
   new LocalStrategy(
     {
-      usernameField: "email",
-      passwordField: "password",
-      passReqToCallback: true,
+      usernameField: 'email',
+      passwordField: 'password',
+      passReqToCallback: true
     },
     async (req, email, password, done) => {
       const existingUser = await User.findOne({ email });
-      if (existingUser)
-        return done(null, false, { message: "This email-id is already taken" });
+      if (existingUser) return done(null, false, { message: 'This email-id is already taken' });
       else {
         const { name } = req.body;
         const user = await new User({ name, email, password });
@@ -105,18 +98,16 @@ passport.use(
 passport.use(
   new LocalStrategy(
     {
-      usernameField: "email",
-      passReqToCallback: true,
+      usernameField: 'email',
+      passReqToCallback: true
     },
-    async (req, email, password, done) => {
+    async (_, email, password, done) => {
       try {
         const user = await User.findOne({ email });
-        if (!user)
-          return done(null, false, { message: "Invalid Email or Password" });
+        if (!user) return done(null, false, { message: 'Invalid Email or Password' });
 
         const validPassword = bcrypt.compare(password, user.password);
-        if (!validPassword)
-          return done(null, false, { message: "Invalid Email or Password" });
+        if (!validPassword) return done(null, false, { message: 'Invalid Email or Password' });
 
         done(null, user);
       } catch (err) {
