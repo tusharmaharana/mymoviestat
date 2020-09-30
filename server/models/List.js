@@ -1,4 +1,5 @@
 import { model, Schema } from 'mongoose';
+import { StatusEnum, TypeEnum } from '../constants';
 
 const List = model(
   'lists',
@@ -19,12 +20,12 @@ const List = model(
     },
     status: {
       type: String,
-      enum: ['WANT_TO_SEE', 'WATCHING', 'SEEN', 'ON_HOLD']
+      enum: [StatusEnum.watching, StatusEnum['want-to-see'], StatusEnum.seen, StatusEnum['on-hold']]
     },
     type: {
       type: String,
       required: true,
-      enum: ['MOVIE', 'SERIES', 'EPISODE']
+      enum: [TypeEnum.movie, TypeEnum.series, TypeEnum.episode]
     },
     year: String,
     imdbRating: {

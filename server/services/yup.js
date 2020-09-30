@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+import { StatusEnum, TypeEnum } from '../constants';
 
 export const signupSchema = {
   name: yup.string().min(3).max(50).trim().required(),
@@ -17,11 +18,11 @@ export const recordSchema = {
   favourite: yup.boolean().default(false),
   status: yup
     .string()
-    .matches(/(WANT_TO_SEE|WATCHING|SEEN|ON_HOLD)/)
+    .matches(new RegExp(StatusEnum['want-to-see'] | StatusEnum.watching | StatusEnum.seen | StatusEnum['on-hold']))
     .notRequired(),
   type: yup
     .string()
-    .matches(/(MOVIE|SERIES|EPISODE)/)
+    .matches(new RegExp(TypeEnum.movie | TypeEnum.series | TypeEnum.episode))
     .required(),
   year: yup.string(),
   imdbRating: yup.mixed().test('is-decimal', 'not a decimal number', val => !isNaN(val)),
