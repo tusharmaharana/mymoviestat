@@ -1,7 +1,7 @@
 import { model, Schema } from 'mongoose';
 import { StatusEnum, TypeEnum } from '../constants';
 
-const List = model(
+export const List = model(
   'lists',
   new Schema({
     title: {
@@ -34,9 +34,6 @@ const List = model(
       max: 10
     },
     poster: String,
-
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true }
   })
 );
-
-export default List;

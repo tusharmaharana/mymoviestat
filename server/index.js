@@ -3,12 +3,12 @@ import express from 'express';
 import mongoose from 'mongoose';
 import passport from 'passport';
 import keys from './config/keys';
-import authRoutes from './routes/authRoutes';
-import listRoutes from './routes/listRoutes';
+import { authRouter, listRouter } from './routes';
 import './services/passport';
 
 const app = express();
 
+// Mongoose Initialization
 mongoose
   .connect(keys.dbHost, {
     useNewUrlParser: true,
@@ -28,16 +28,16 @@ app.use(
   })
 );
 
+// Passport Initialization
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/api/auth', authRoutes);
-app.get('/api/me', (req, res) => {
-  res.send(req.user);
-});
-app.use('/api/list', listRoutes);
+// Routes
+app.get('/api/me', (req, res) => res.send(req.user));
+app.use('/api/auth', authRouter);
+app.use('/api/list', listRouter);
 
 app.listen(keys.port, () => console.log(`Listening on PORT ${keys.port}`));

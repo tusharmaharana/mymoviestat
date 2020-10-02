@@ -1,6 +1,6 @@
 import { model, Schema } from 'mongoose';
 
-const User = model(
+export const User = model(
   'users',
   new Schema({
     googleId: String,
@@ -16,5 +16,3 @@ const User = model(
     password: { type: String, minlength: 8, maxlength: 255 }
   })
 );
-
-export default User;
