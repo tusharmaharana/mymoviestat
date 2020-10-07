@@ -4,7 +4,7 @@ import { Strategy as FacebookStrategy } from 'passport-facebook';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Strategy as LocalStrategy } from 'passport-local';
 import keys from '../config/keys';
-import User from '../models/User';
+import { User } from '../models';
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -13,7 +13,7 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((id, done) => {
   User.findById(id)
     .then(user => done(null, user))
-    .catch(err => done(err, user));
+    .catch(err => done(err));
 });
 
 passport.use(
@@ -82,7 +82,7 @@ passport.use(
       if (existingUser) return done(null, false, { message: 'This email-id is already taken' });
       else {
         const { name } = req.body;
-        const user = await new User({ name, email, password });
+        const user = new User({ name, email, password });
 
         const salt = await bcrypt.genSalt(10);
         user.password = await bcrypt.hash(user.password, salt);

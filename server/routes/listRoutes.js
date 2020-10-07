@@ -1,8 +1,9 @@
 import { Router } from 'express';
 import { StatusEnum, TypeEnum } from '../constants';
 import { ensureAuth, validate } from '../middleware';
-import List from '../models/List';
-import { recordSchema } from '../services/yup';
+import { List } from '../models';
+import { idSchema, recordSchema, validateInput } from '../services/yup';
+import { cleanMongoObject } from '../utils';
 
 const router = Router();
 
@@ -10,12 +11,17 @@ router.use(ensureAuth);
 
 router.get('/title/:id', async (req, res) => {
   try {
-    const record = await List.findOne({ imdbID: req.params.id, userId: req.user.id }).select('favourite status');
-    if (record) res.status(200).send(record);
+    await validateInput(idSchema, req.query);
+    /**
+     * NOTE: ['keyA', 'keyB', ...] is standard argument for many similar APIs.
+     * Use this instead of a space-separated single string.
+     */
+    const record = await List.findOne({ imdbID: req.params.id, userId: req.user.id }).select(['favourite', 'status']);
+    if (record) res.status(200).send(cleanMongoObject(record));
     else res.status(404).send({ message: 'The requested movie is not present' });
   } catch (err) {
     console.error(err);
-    res.status(400).send(err.message);
+    res.status(500).send(err.message);
   }
 });
 
