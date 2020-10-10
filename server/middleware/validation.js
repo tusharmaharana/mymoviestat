@@ -1,10 +1,9 @@
-import { validateInput } from '../services/yup';
+import * as yup from 'yup';
 
-export const validate = schema => {
+export const validate = (schema, validationObj) => {
   return async (req, res, next) => {
     try {
-      const body = await validateInput(schema, req.body);
-      req.body = body;
+      await yup.object().shape(schema).strict(true).noUnknown().validate(validationObj, { abortEarly: false });
       next();
     } catch (err) {
       console.error(err);
