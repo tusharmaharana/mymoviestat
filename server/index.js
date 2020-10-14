@@ -3,7 +3,8 @@ import express from 'express';
 import mongoose from 'mongoose';
 import passport from 'passport';
 import keys from './config/keys';
-import { authRouter, listRouter } from './routes';
+import { ensureAuth } from './middleware';
+import { authRouter, favoriteRouter, movieRouter, statusRouter } from './routes';
 import './services/passport';
 
 const app = express();
@@ -38,6 +39,9 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.get('/api/me', (req, res) => res.send(req.user));
 app.use('/api/auth', authRouter);
-app.use('/api/list', listRouter);
+app.use('/api/movies', movieRouter);
+app.use(ensureAuth);
+app.use('/api/status/movies', statusRouter);
+app.use('/api/favorite/movies', favoriteRouter);
 
 app.listen(keys.port, () => console.log(`Listening on PORT ${keys.port}`));
