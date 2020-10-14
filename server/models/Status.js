@@ -1,8 +1,8 @@
 import { model, Schema } from 'mongoose';
 import { StatusEnum } from '../constants';
 
-export const List = model(
-  'lists',
+export const Status = model(
+  'status',
   new Schema({
     status: {
       type: String,

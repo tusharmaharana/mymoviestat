@@ -1,8 +1,8 @@
 import { model, Schema } from 'mongoose';
 import { TypeEnum } from '../constants';
 
-export const List = model(
-  'movie',
+export const Movie = model(
+  'movies',
   new Schema({
     title: {
       type: String,
@@ -77,14 +77,6 @@ export const List = model(
       required: true,
       enum: [TypeEnum.movie, TypeEnum.series, TypeEnum.episode]
     },
-    production: String,
-    favourite: {
-      type: Boolean,
-      default: false
-    },
-    status: {
-      type: String,
-      enum: [StatusEnum.watching, StatusEnum['want-to-see'], StatusEnum.seen, StatusEnum['on-hold']]
-    }
+    production: String
   })
 );
