@@ -2,12 +2,13 @@ import { Router } from 'express';
 import passport from 'passport';
 import { ensureAuth, forbidAuth, validate } from '../middleware';
 import { signinSchema, signupSchema } from '../services/yup';
+import HttpStatusCode from '../utils/HTTPStatusCode';
 
 const router = Router();
 
 router.get('/signOut', ensureAuth, (req, res) => {
   req.logOut();
-  res.redirect('/');
+  res.status(200).send({ message: 'Logged Out!' });
 });
 
 router.use(forbidAuth);
@@ -34,30 +35,25 @@ router.get(
   })
 );
 
-router.get(
-  '/facebook/callback',
-  passport.authenticate('facebook', {
-    successRedirect: '/',
-    failureRedirect: '/'
-  })
-);
+router.get('/facebook/callback', passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/' }));
 
-router.post(
-  '/signUp',
-  validate(signupSchema),
-  passport.authenticate('signup', {
-    successRedirect: '/',
-    failureRedirect: '/signUp'
-  })
-);
+// router.post('/signUp', validate(signupSchema), passport.authenticate('signup'));
 
-router.post(
-  '/signIn',
-  validate(signinSchema),
-  passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/signIn'
-  })
-);
+router.post('/signUp', validate(signupSchema), async (req, res, next) => {
+  return passport.authenticate('signup', (error, user) => {
+    if (error) return res.status(HttpStatusCode.BAD_REQUEST).send(error);
+    return res.status(200).send(user);
+  })(req, res, next);
+});
+
+router.post('/signIn', validate(signinSchema), async (req, res, next) => {
+  return passport.authenticate('local', (error, user) => {
+    if (error || !user) return res.status(400).send({ email: ' ', password: 'Wrong email or password!' });
+    return req.login(user, err => {
+      if (err) return res.status(400).send(err);
+      return res.status(200).send(user);
+    });
+  })(req, res, next);
+});
 
 export default router;

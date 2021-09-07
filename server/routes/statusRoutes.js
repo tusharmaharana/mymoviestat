@@ -1,15 +1,17 @@
 import { Router } from 'express';
-import { StatusEnum } from '../constants';
 import { validate } from '../middleware';
 import { Status } from '../models';
 import { idSchema, listSchema, querySchema } from '../services/yup';
 import {
+  aggregateQuery,
   cleanMongoObject,
+  createLookup,
+  createMatch,
   findOneAndDeleteQuery,
   findOneAndUpdateQuery,
   findOneQuery,
-  findQuery,
-  isNotEmptyArray
+  isNotEmptyArray,
+  MongoIdType
 } from '../utils';
 
 const router = new Router();
@@ -20,13 +22,24 @@ router.get('/:id', validate(idSchema, 'params'), async (req, res) => {
     if (record) return res.status(200).send(record.status);
     res.status(404).send({ message: 'The movie has no status' });
   } catch (err) {
-    res.status(404).send(err.message);
+    res.status(500).send(err.message);
   }
 });
 
 router.get('/', validate(querySchema, 'query'), async (req, res) => {
   try {
-    const records = await findQuery(Status, { userId: req.user.id, status: StatusEnum[req.query.sortBy] });
+    const query = [
+      createMatch({ userId: MongoIdType(req.user.id) }),
+      createLookup({
+        from: 'movies',
+        localField: 'movieId',
+        foreignField: '_id',
+        as: 'movie_details'
+      })
+    ];
+
+    const records = await aggregateQuery(Status, query);
+    // const records = await findQuery(Status, { userId: req.user.id });
     if (isNotEmptyArray(records)) return res.status(200).send(cleanMongoObject(records));
     res.status(404).send({ message: `There is no movies in ${req.query.sortBy}` });
   } catch (err) {

@@ -1,12 +1,12 @@
 export const StatusEnum = {
-  ['watching']: 'WATCHING',
-  ['seen']: 'SEEN',
-  ['want-to-see']: 'WANT_TO_SEE',
-  ['on-hold']: 'ON_HOLD'
+  ['watching']: 'Watching',
+  ['seen']: 'Seen',
+  ['want-to-see']: 'Want To See',
+  ['on-hold']: 'On Hold'
 };
 
 export const TypeEnum = {
-  ['movie']: 'MOVIE',
-  ['series']: 'SERIES',
-  ['episode']: 'EPISODE'
+  ['movie']: 'movie',
+  ['series']: 'series',
+  ['episode']: 'episode'
 };

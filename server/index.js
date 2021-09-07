@@ -1,4 +1,5 @@
 import cookieSession from 'cookie-session';
+import cors from 'cors';
 import express from 'express';
 import mongoose from 'mongoose';
 import passport from 'passport';
@@ -8,6 +9,19 @@ import { authRouter, favoriteRouter, movieRouter, statusRouter } from './routes'
 import './services/passport';
 
 const app = express();
+
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+  })
+);
+app.enable('trust proxy');
+// app.use(function (req, res, next) {
+//   res.header('Access-Control-Allow-Origin', 'http://localhost:3000'); // update to match the domain you will make the request from
+//   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+//   next();
+// });
 
 // Mongoose Initialization
 mongoose
@@ -22,10 +36,12 @@ mongoose
 
 app.set('trust proxy', 1);
 
+//Cookies Session
 app.use(
   cookieSession({
     maxAge: 30 * 24 * 60 * 60 * 1000,
-    keys: [keys.cookieKey]
+    keys: [keys.cookieKey],
+    httpOnly: false
   })
 );
 
@@ -33,11 +49,17 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+//Bodyparser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
-app.get('/api/me', (req, res) => res.send(req.user));
+app.get('/api/current-user', (req, res) => {
+  if (req.user) {
+    const { name = {}, email = {} } = req.user;
+    res.send({ name, email });
+  } else res.send(req.user);
+});
 app.use('/api/auth', authRouter);
 app.use('/api/movies', movieRouter);
 app.use(ensureAuth);

@@ -1,5 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/App';
+import { AuthProvider } from './context/AuthContext';
+import { MovieProvider } from './context/MovieContext';
+import { SearchProvider } from './context/SelectContext';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(
+  <SearchProvider>
+    <AuthProvider>
+      <MovieProvider>
+        <App />
+      </MovieProvider>
+    </AuthProvider>
+  </SearchProvider>,
+  document.getElementById('root')
+);
