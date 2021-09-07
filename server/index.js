@@ -3,6 +3,7 @@ import cors from 'cors';
 import express from 'express';
 import mongoose from 'mongoose';
 import passport from 'passport';
+import path from 'path';
 import keys from './config/keys';
 import { ensureAuth } from './middleware';
 import { authRouter, favoriteRouter, movieRouter, statusRouter } from './routes';
@@ -65,5 +66,14 @@ app.use('/api/movies', movieRouter);
 app.use(ensureAuth);
 app.use('/api/status/movies', statusRouter);
 app.use('/api/favorite/movies', favoriteRouter);
+
+//PRODUCTION ROUTE
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('client/build'));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  });
+}
 
 app.listen(keys.port, () => console.log(`Listening on PORT ${keys.port}`));

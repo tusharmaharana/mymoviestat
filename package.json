@@ -7,10 +7,11 @@
   "scripts": {
     "build": "babel server -d dist",
     "serve": "node -r dotenv/config dist/index.js",
-    "start": "bable-node -r dotenv/config server/index.js",
+    "start": "node server/index.js",
     "dev": "nodemon -r dotenv/config --exec babel-node server/index.js",
     "start-client": "cd client && yarn start",
-    "reset": "rm -rf node_modules && yarn"
+    "reset": "rm -rf node_modules && yarn",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm i --prefix client && npm run build --prefix client"
   },
   "keywords": [
     "movie",
