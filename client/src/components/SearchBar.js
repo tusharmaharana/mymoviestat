@@ -16,9 +16,13 @@ const SearchBar = ({ setSearchQuery, setMyProfile }) => {
     const params = {
       s: query
     };
-    const { data } = await omdb(params);
-    setResults(data);
-    setMyProfile(null);
+    try {
+      const { data } = await omdb(params);
+      setResults(data);
+      setMyProfile(null);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
