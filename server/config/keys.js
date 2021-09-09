@@ -1,5 +1,5 @@
 const keys = {
-  dbHost: process.env.DB_HOST,
+  dbHost: process.env.MONGODB_URI,
   googleClientId: process.env.GOOGLE_CLIENT_ID,
   googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
   facebookAppId: process.env.FACEBOOK_APP_ID,
