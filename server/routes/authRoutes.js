@@ -37,12 +37,12 @@ router.get(
 
 router.get('/facebook/callback', passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/' }));
 
-// router.post('/signUp', validate(signupSchema), passport.authenticate('signup'));
-
 router.post('/signUp', validate(signupSchema), async (req, res, next) => {
   return passport.authenticate('signup', (error, user) => {
-    if (error) return res.status(HttpStatusCode.BAD_REQUEST).send(error);
-    return res.status(200).send(user);
+    return req.login(user, error => {
+      if (error) return res.status(HttpStatusCode.BAD_REQUEST).send(error);
+      return res.status(200).send(user);
+    });
   })(req, res, next);
 });
 
