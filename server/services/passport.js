@@ -7,7 +7,7 @@ import keys from '../config/keys';
 import { User } from '../models';
 
 passport.serializeUser((user, done) => {
-  done(null, user.id);
+  done(null, user);
 });
 
 passport.deserializeUser((id, done) => {
