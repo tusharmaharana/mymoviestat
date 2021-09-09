@@ -1,8 +1,10 @@
-// export const ensureAuth = (req, res, next) => {
-//   if (req.isAuthenticated()) {
-//     next();
-//   } else res.status(HttpStatusCode.UNAUTHORIZED).send({ error: 'not authorized' });
-// };
+import HttpStatusCode from '../utils/HTTPStatusCode';
+
+export const ensureAuth = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    next();
+  } else res.status(HttpStatusCode.UNAUTHORIZED).send({ error: 'not authorized' });
+};
 
 export const forbidAuth = (req, res, next) => {
   if (!req.isAuthenticated()) {
