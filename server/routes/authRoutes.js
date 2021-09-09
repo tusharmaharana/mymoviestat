@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import passport from 'passport';
-import { ensureAuth, forbidAuth, validate } from '../middleware';
+import { forbidAuth, validate } from '../middleware';
 import { signinSchema, signupSchema } from '../services/yup';
 import HttpStatusCode from '../utils/HTTPStatusCode';
 
 const router = Router();
 
-router.get('/signOut', ensureAuth, (req, res) => {
+router.get('/signOut', (req, res) => {
   req.logOut();
   res.status(200).send({ message: 'Logged Out!' });
 });

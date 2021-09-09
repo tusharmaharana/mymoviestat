@@ -5,7 +5,6 @@ import mongoose from 'mongoose';
 import passport from 'passport';
 import path from 'path';
 import keys from './config/keys';
-import { ensureAuth } from './middleware';
 import { authRouter, favoriteRouter, movieRouter, statusRouter } from './routes';
 import './services/passport';
 
@@ -63,7 +62,7 @@ app.get('/api/current-user', (req, res) => {
 });
 app.use('/api/auth', authRouter);
 app.use('/api/movies', movieRouter);
-app.use(ensureAuth);
+// app.use(ensureAuth);
 app.use('/api/status/movies', statusRouter);
 app.use('/api/favorite/movies', favoriteRouter);
 
