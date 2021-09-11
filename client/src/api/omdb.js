@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const KEY = process.env.REACT_APP_OMDB_API_KEY;
+const KEY = 'd2407aec';
 
 const omdb = restParams =>
   axios.get('https://www.omdbapi.com/', {
