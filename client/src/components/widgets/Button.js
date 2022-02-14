@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import React from 'react';
 import { Button as AppButton } from 'react-bootstrap';
 
@@ -24,5 +25,13 @@ const Button = props => {
     </AppButton>
   );
 };
+
+export const StyledButton = styled(Button)`
+  background-color: #862eff;
+  border: none;
+  :focus {
+    outline: none;
+  }
+`;
 
 export default Button;
