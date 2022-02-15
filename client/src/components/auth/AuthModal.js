@@ -24,7 +24,7 @@ const AuthModal = props => {
   return (
     <Modal centered {...restProps}>
       <Container>
-        <h1 style={{ color: '#862EFF' }}>{isSignUp ? 'Create Account' : 'Sign In'}</h1>
+        <h1 style={{ color: '#ffffff' }}>{isSignUp ? 'Create Account' : 'Sign In'}</h1>
 
         <AuthForm
           onSubmit={signIn}
@@ -37,7 +37,7 @@ const AuthModal = props => {
         />
 
         <div className="d-flex flex-column align-items-center justify-content-center mt-4">
-          <h4>or use</h4>
+          <h4 style={{ color: '#ffffff' }}>or use</h4>
           <div className="d-flex align-items-center">
             <OAuthButton href="/api/auth/google">
               <div className="mr-4 d-flex flex-column align-items-center justify-content-center">
@@ -55,8 +55,16 @@ const AuthModal = props => {
         </div>
 
         <div className="mt-4 d-flex align-items-center">
-          <p className="m-0 mr-2">{isSignUp ? 'Already have an account? ' : "Don't have an account yet? "}</p>
-          <StyledButton size="sm" title={isSignUp ? 'Sign In' : 'Sign Up'} onClick={() => setIsSignUp(!isSignUp)} />
+          <p className="m-0 mr-2" style={{ color: '#ffffff' }}>
+            {isSignUp ? 'Already have an account? ' : "Don't have an account yet? "}
+          </p>
+          <StyledButton
+            variant="outline-primary"
+            style={{ background: 'none', color: '#862eff' }}
+            size="sm"
+            title={isSignUp ? 'Sign In' : 'Sign Up'}
+            onClick={() => setIsSignUp(!isSignUp)}
+          />
         </div>
       </Container>
     </Modal>
@@ -74,6 +82,7 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   padding: 2rem;
+  background-color: #000000;
 `;
 
 const OAuthButton = styled.a`

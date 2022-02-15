@@ -41,7 +41,7 @@ const AuthForm = props => {
             component={MyTextInput}
           />
           <StyledButton
-            className="mt-2"
+            className="my-4"
             disabled={isSubmitting}
             type="submit"
             title={isSignUp ? 'Sign Up' : 'Sign In'}
@@ -56,7 +56,7 @@ const MyTextInput = props => {
   const { field, form } = props;
   const error = form.touched[field.name] && form.errors[field.name] ? form.errors[field.name] : null;
   return (
-    <div className="d-flex flex-column my-2">
+    <div className="d-flex flex-column my-3">
       <input
         {...field}
         {...props}
@@ -66,7 +66,9 @@ const MyTextInput = props => {
           fontSize: '1.2rem',
           padding: '10px',
           borderRadius: '5px',
-          border: '1px solid #862EFF'
+          border: '1px solid #FFFFFF',
+          backgroundColor: '#000000',
+          color: '#ffffff'
         }}
       />
       <div className={error ? 'd-block text-danger' : 'd-none'}>{error}</div>

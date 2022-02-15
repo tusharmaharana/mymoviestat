@@ -30,7 +30,9 @@ export const StyledButton = styled(Button)`
   background-color: #862eff;
   border: none;
   :focus {
-    outline: none;
+    outline: none !important;
+    outline-offset: none !important;
+    box-shadow: none !important;
   }
 `;
 
