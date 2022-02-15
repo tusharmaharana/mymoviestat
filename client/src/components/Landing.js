@@ -5,7 +5,7 @@ import SearchResults from './SearchResults';
 const Landing = props => {
   const { results } = useSelectedMovie();
 
-  return <>{!!results && <SearchResults />}</>;
+  return !!results && <SearchResults />;
 };
 
 export default Landing;

@@ -6,9 +6,11 @@ import { useState } from 'react';
 import { Form } from 'react-bootstrap';
 import omdb from '../api/omdb';
 import { useSelectedMovie } from '../context/SelectContext';
+import Loader from './widgets/Loader';
 
 const SearchBar = ({ setMyProfile }) => {
   const [query, setQuery] = useState('');
+  const [loading, setLoading] = useState(false);
   const { setResults } = useSelectedMovie();
   const handleSubmit = async e => {
     e.preventDefault();
@@ -16,9 +18,11 @@ const SearchBar = ({ setMyProfile }) => {
       s: query
     };
     try {
+      setLoading(true);
       const { data } = await omdb(params);
       setResults(data);
       setMyProfile(null);
+      setLoading(false);
     } catch (err) {
       console.error(err);
     }
@@ -33,7 +37,7 @@ const SearchBar = ({ setMyProfile }) => {
         onChange={e => setQuery(e.target.value)}
       />
       <button className="border-0 p-0 mr-3 mt-1" style={{ backgroundColor: 'inherit', color: 'white' }}>
-        <FontAwesomeIcon css={iconStyle} icon={faSearch} />
+        {loading ? <Loader color="white" width={20} /> : <FontAwesomeIcon css={iconStyle} icon={faSearch} />}
       </button>
     </Form>
   );

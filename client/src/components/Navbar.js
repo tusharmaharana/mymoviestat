@@ -67,7 +67,7 @@ const Navbar = props => {
 };
 
 const Nav = styled.div`
-  width: 90%;
+  width: 100%;
   margin: 20px auto;
   padding: 20px;
   border-radius: 15px;

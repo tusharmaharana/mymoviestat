@@ -33,22 +33,24 @@ const App = () => {
 
   return (
     <StyledContainer fluid>
-      <Row>
-        <Navbar setMyProfile={setMyProfile} />
-      </Row>
-      <Row>{showComponent()}</Row>
-      <MovieDetails />
-      <AuthModal
-        show={!!authModalState}
-        onHide={() => setAuthModalState(null)}
-        signup={authModalState === 'signUp' ? true : false}
-      />
+      <div style={{ width: '90%', margin: '0 auto' }}>
+        <Row>
+          <Navbar setMyProfile={setMyProfile} />
+        </Row>
+        <Row>{showComponent()}</Row>
+        <MovieDetails />
+        <AuthModal
+          show={!!authModalState}
+          onHide={() => setAuthModalState(null)}
+          signup={authModalState === 'signUp' ? true : false}
+        />
+      </div>
     </StyledContainer>
   );
 };
 
 const StyledContainer = styled(Container)`
-  height: 100vh;
+ min-height: 100vh;
   background: #141E30;
   background: -webkit-linear-gradient(to right, #243B55, #141E30);
   background: 'linear-gradient(to right, #243B55, #141E30)

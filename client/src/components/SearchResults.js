@@ -1,5 +1,4 @@
-import { Card, Col } from 'react-bootstrap';
-import Masonry from 'react-masonry-css';
+import { Card } from 'react-bootstrap';
 import { useSelectedMovie } from '../context/SelectContext';
 
 const SearchResults = () => {
@@ -8,25 +7,32 @@ const SearchResults = () => {
   return (
     <div>
       {!!results.Error ? (
-        <h2>No results for </h2>
+        <h2>Sorry, no results found </h2>
       ) : (
         <>
-          <h2>Showing results for</h2>
-          <Masonry breakpointCols={1}>
+          <h2 style={{ color: 'white' }}>Results</h2>
+          <div className="d-flex align-items-center flex-wrap">
             {results.Search?.map((item, index) => {
               return (
-                <Col key={`${item.imdbID}-${index}`}>
-                  <Card onClick={() => setSelectedMovie(item)} style={{ cursor: 'pointer' }}>
-                    <Card.Img variant="top" src={item.Poster} />
-                    <Card.Body>
-                      <Card.Title>{item.Title}</Card.Title>
-                      <Card.Text>{item.Year}</Card.Text>
-                    </Card.Body>
-                  </Card>
-                </Col>
+                <Card
+                  className="m-3"
+                  key={`${item.imdbID}-${index}`}
+                  onClick={() => setSelectedMovie(item)}
+                  style={{ cursor: 'pointer', width: '250px', height: '470px' }}
+                >
+                  <Card.Img
+                    variant="top"
+                    src={item.Poster === 'N/A' ? '/assets/no-image.png' : item.Poster}
+                    style={{ height: '350px', objectFit: 'cover' }}
+                  />
+                  <Card.Body>
+                    <Card.Title>{item.Title}</Card.Title>
+                    <Card.Text>{item.Year}</Card.Text>
+                  </Card.Body>
+                </Card>
               );
             })}
-          </Masonry>
+          </div>
           {/* <Row md={5} className="">
           </Row> */}
         </>
