@@ -3,6 +3,7 @@ import { Card, Col, Row } from 'react-bootstrap';
 import { useMovieRecord } from '../context/MovieContext';
 import { useSelectedMovie } from '../context/SelectContext';
 import getData from '../hooks/getData';
+import SearchResults from './SearchResults';
 import Button from './widgets/Button';
 
 const MyFavorites = () => {
@@ -29,9 +30,12 @@ const MyFavorites = () => {
   return (
     <div>
       {totalFavorites.length === 0 ? (
-        <p className="mt-3" style={{ color: 'white', fontSize: '1.6rem' }}>
-          No Movie added to Favorites yet!
-        </p>
+        <>
+          <p className="mt-3 mb-5" style={{ color: 'white', fontSize: '1.6rem' }}>
+            No Movie added to Favorites yet! Check these out &gt;
+          </p>
+          <SearchResults />
+        </>
       ) : (
         <>
           <h2 className="my-3" style={{ color: 'white' }}>

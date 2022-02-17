@@ -7,6 +7,7 @@ import { Card, Col, Row } from 'react-bootstrap';
 import { useMovieRecord } from '../context/MovieContext';
 import { useSelectedMovie } from '../context/SelectContext';
 import getData from '../hooks/getData';
+import SearchResults from './SearchResults';
 import Button from './widgets/Button';
 
 const listStatuses = ['Want To See', 'Watching', 'Seen', 'On Hold'];
@@ -84,7 +85,12 @@ const MyList = () => {
             </Row>
           </>
         ) : (
-          <p style={{ color: 'white', fontSize: '1.6rem' }}>No Movie added yet!</p>
+          <>
+            <p className="mb-5" style={{ color: 'white', fontSize: '1.6rem' }}>
+              No Movie added yet! Check these out &gt;
+            </p>
+            <SearchResults />
+          </>
         )}
       </div>
     </div>
