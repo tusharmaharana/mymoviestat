@@ -6,13 +6,13 @@ const SearchResults = () => {
 
   return (
     <div>
-      {!results.total_results ? (
-        <h2>Sorry, no results found </h2>
+      {!results.data.total_results ? (
+        <h2 style={{ color: 'white' }}>Sorry, no results found </h2>
       ) : (
         <>
-          <h2 style={{ color: 'white' }}>Results</h2>
+          <h2 style={{ color: 'white' }}>{results.header}</h2>
           <div className="d-flex align-items-start flex-wrap">
-            {results.results?.map((item, index) => {
+            {results.data.results?.map((item, index) => {
               return (
                 <div
                   className="position-relative m-3"

@@ -1,4 +1,4 @@
-import tmdb from '../api/omdb';
+import tmdb from '../api/tmdb';
 // import { renameKey } from '../utils/renameKey';
 // import getData from './getData';
 
