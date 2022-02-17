@@ -4,7 +4,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import { Form } from 'react-bootstrap';
-import omdb from '../api/omdb';
+import tmdb from '../api/omdb';
 import { useSelectedMovie } from '../context/SelectContext';
 import Loader from './widgets/Loader';
 
@@ -15,11 +15,11 @@ const SearchBar = ({ setMyProfile }) => {
   const handleSubmit = async e => {
     e.preventDefault();
     const params = {
-      s: query
+      query
     };
     try {
       setLoading(true);
-      const { data } = await omdb(params);
+      const { data } = await tmdb('/search/movie', params);
       setResults(data);
       setMyProfile(null);
       setLoading(false);

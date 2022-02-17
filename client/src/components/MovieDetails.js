@@ -8,6 +8,7 @@ import { useMovieRecord } from '../context/MovieContext';
 import { useSelectedMovie } from '../context/SelectContext';
 import getData from '../hooks/getData';
 import Button from './widgets/Button';
+import Loader from './widgets/Loader';
 
 const MovieDetails = props => {
   const { details, setSelectedMovie, setShowMovieModal, showMovieModal } = useSelectedMovie();
@@ -25,8 +26,6 @@ const MovieDetails = props => {
   const [favorite, setFavorite] = useState(undefined);
 
   useEffect(() => {
-    console.log('object');
-    console.log(totalStatuses);
     const statRes = totalStatuses?.find(current => details?.id === current?.movieId);
     statRes ? setMovieStatus(statRes?.status) : setMovieStatus(null);
   }, [details, totalStatuses]);
@@ -95,21 +94,100 @@ const MovieDetails = props => {
   };
 
   return (
-    <StyledModal centered show={showMovieModal} onHide={hideModal}>
+    <StyledModal
+      show={showMovieModal}
+      onHide={() => {
+        const modal = document.getElementsByClassName('modal-dialog')[0];
+        modal.style.animation = 'animateexit 0.4s forwards';
+        setTimeout(() => {
+          hideModal();
+        }, 400);
+      }}
+    >
       {!details ? (
-        <div>Loading Movie</div>
+        <div className="d-flex align-items-center justify-content-center w-100 h-100">
+          <Loader color="black" size="50px" />
+        </div>
       ) : (
-        <Container>
-          <Row className="d-flex">
-            <Col className="" xs={4}>
-              <Image src={details?.poster} fluid />
+        <Container
+          style={{
+            backgroundImage: `url(https://www.themoviedb.org/t/p/w1920_and_h800_multi_faces/${details?.backdrop_path})`
+          }}
+        >
+          <div
+            className="position-absolute w-100 h-100"
+            style={{
+              top: 0,
+              left: 0,
+              background: 'linear-gradient(to right, rgba(29,43,100, 0.8), rgba(248,205,218, 0.8))'
+            }}
+          ></div>
+          <Row className="d-flex align-items-center h-100">
+            <Col xs={3}>
+              <Image
+                width="350"
+                style={{ borderRadius: '20px' }}
+                src={
+                  !details.poster_path
+                    ? '/assets/no-image.png'
+                    : `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${details.poster_path}`
+                }
+                fluid
+              />
+            </Col>
+            <Col xs={9} className="">
+              <Row className="ml-0">
+                <h1>
+                  <span style={{ fontWeight: 700 }}>{details?.title}</span>{' '}
+                  {details?.release_date ? `(${new Date(details?.release_date).getFullYear()})` : ''}
+                </h1>
+              </Row>
+              <Row className="ml-0 mb-3">
+                <label style={{ fontSize: '1.2rem' }}>
+                  <strong>{details?.vote_average}</strong>/10 • {details?.genres.map(genre => genre.name).join(', ')}{' '}
+                  {details?.runtime > 0
+                    ? `• ${Math.floor(details?.runtime / 60) > 0 ? `${Math.floor(details?.runtime / 60)}hr` : ''} ${
+                        details?.runtime % 60
+                      }min`
+                    : ''}
+                </label>
+              </Row>
+              <div className="mb-3" style={{ maxWidth: '60%' }}>
+                <h3>Overview</h3>
+                <p>{details?.overview}</p>
+              </div>
+              <div className="mb-3" style={{ maxWidth: '60%' }}>
+                <h5>Director</h5>
+                <p>{details?.crew.find(member => member.job === 'Director').name}</p>
+                <h5>Cast</h5>
+                <p>
+                  {details?.cast
+                    .slice(0, 5)
+                    .map(member => member.name)
+                    .join(', ')}
+                </p>
+              </div>
               <div>
+                {details?.homepage ? (
+                  <Button
+                    title="Watch Now"
+                    variant="light"
+                    onClick={() => window.open(details?.homepage)}
+                    className="mr-3"
+                  />
+                ) : null}
+                <Button
+                  title={favorite ? 'Added to Favorites' : 'Add to Favorites'}
+                  variant="light"
+                  onClick={handleFavoriteOnClick}
+                  className="mr-3"
+                />
                 <DropdownButton
                   as={ButtonGroup}
                   id="dropdown-button-drop-right"
                   drop="right"
-                  variant="secondary"
-                  title={movieStatus ? movieStatus : 'Add to MyList'}
+                  variant="light"
+                  title={movieStatus ? movieStatus : 'Add to My List'}
                 >
                   {['Want To See', 'Watching', 'Seen', 'On Hold'].map(status => {
                     if (status !== movieStatus)
@@ -121,26 +199,7 @@ const MovieDetails = props => {
                     return null;
                   })}
                 </DropdownButton>
-                <Button
-                  title={favorite ? 'Added to Favorites' : 'Add to Favorites'}
-                  variant="secondary"
-                  onClick={handleFavoriteOnClick}
-                />
               </div>
-            </Col>
-            <Col xs={8} className="">
-              <Row className="ml-0">
-                <h1>{details?.title}</h1>
-              </Row>
-              <Row className="ml-0">
-                <label>
-                  IMDb-<strong>{details?.imdbRating}</strong>/10 &#x2219; {details?.runtime} &#x2219; {details?.year}{' '}
-                  &#x2219; {details?.type}
-                </label>
-              </Row>
-              <hr />
-              <Row></Row>
-              {/* <p>{details?.plot}</p> */}
             </Col>
           </Row>
         </Container>
@@ -151,12 +210,54 @@ const MovieDetails = props => {
 
 const Container = styled.div`
   width: 100%;
-  padding: 1rem;
+  height: 100%;
+  padding: 1.2rem 4rem;
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: relative;
+  color: white;
 `;
 
 const StyledModal = styled(Modal)`
+  @keyframes animateenter {
+    from {
+      bottom: -300px;
+      opacity: 0;
+    }
+
+    to {
+      bottom: 0;
+      opacity: 1;
+    }
+  }
+
+  @keyframes animateexit {
+    from {
+      bottom: 0px;
+      opacity: 1;
+    }
+
+    to {
+      bottom: -300px;
+      opacity: 0;
+    }
+  }
   .modal-dialog {
-    max-width: 50rem;
+    width: 100%;
+    height: 600px;
+    margin: 0 !important;
+    padding: 0 40px !important;
+    position: fixed;
+    animation: animateenter 0.4s forwards;
+    max-width: none !important;
+  }
+  .modal-content {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    border-top-left-radius: 30px !important;
+    border-top-right-radius: 30px !important;
+    overflow: hidden;
   }
   .modal-dialog-centered {
     align-items: stretch;

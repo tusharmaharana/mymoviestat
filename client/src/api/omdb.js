@@ -1,13 +1,13 @@
 import axios from 'axios';
 
-const KEY = 'd2407aec';
+const KEY = 'e024fb9858bdfadae5dc7a5a5c7d26fc';
 
-const omdb = restParams =>
-  axios.get('https://www.omdbapi.com/', {
+const tmdb = (url, restParams) =>
+  axios.get(`https://api.themoviedb.org/3${url}`, {
     params: {
-      apikey: KEY,
+      api_key: KEY,
       ...restParams
     }
   });
 
-export default omdb;
+export default tmdb;

@@ -6,30 +6,60 @@ const SearchResults = () => {
 
   return (
     <div>
-      {!!results.Error ? (
+      {!results.total_results ? (
         <h2>Sorry, no results found </h2>
       ) : (
         <>
           <h2 style={{ color: 'white' }}>Results</h2>
-          <div className="d-flex align-items-center flex-wrap">
-            {results.Search?.map((item, index) => {
+          <div className="d-flex align-items-start flex-wrap">
+            {results.results?.map((item, index) => {
               return (
-                <Card
-                  className="m-3"
-                  key={`${item.imdbID}-${index}`}
+                <div
+                  className="position-relative m-3"
+                  style={{ cursor: 'pointer' }}
                   onClick={() => setSelectedMovie(item)}
-                  style={{ cursor: 'pointer', width: '250px', height: '470px' }}
                 >
-                  <Card.Img
-                    variant="top"
-                    src={item.Poster === 'N/A' ? '/assets/no-image.png' : item.Poster}
-                    style={{ height: '350px', objectFit: 'cover' }}
-                  />
-                  <Card.Body>
-                    <Card.Title>{item.Title}</Card.Title>
-                    <Card.Text>{item.Year}</Card.Text>
-                  </Card.Body>
-                </Card>
+                  <div
+                    className="position-absolute pl-2 d-flex align-items-center"
+                    style={{
+                      top: '20px',
+                      left: 0,
+                      width: '70px',
+                      height: '30px',
+                      background: 'rgba(0,0,0,0.5)',
+                      color: 'white',
+                      zIndex: 1,
+                      borderTopRightRadius: '20px',
+                      borderBottomRightRadius: '20px'
+                    }}
+                  >
+                    ★ {item.vote_average}
+                  </div>
+                  <Card
+                    key={`${item.id}-${index}`}
+                    style={{ width: '250px', minHeight: '450px', background: 'none', border: '3px solid white' }}
+                  >
+                    <Card.Img
+                      variant="top"
+                      src={
+                        !item.poster_path
+                          ? '/assets/no-image.png'
+                          : `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${item.poster_path}`
+                      }
+                      style={{ height: '350px', objectFit: 'cover', background: 'white' }}
+                    />
+                    <Card.Body>
+                      <Card.Title style={{ color: 'white' }}>{item.title}</Card.Title>
+                      <Card.Text style={{ color: 'white' }}>
+                        {item.release_date ? new Date(item.release_date).getFullYear() : '---'}
+                      </Card.Text>
+                    </Card.Body>
+                  </Card>
+                  <div
+                    className="position-absolute"
+                    style={{ height: '100%', width: '100%', background: 'rgba(0,0,0,0.3)', top: 0, left: 0 }}
+                  ></div>
+                </div>
               );
             })}
           </div>
