@@ -12,6 +12,7 @@ const SearchBar = ({ setMyProfile }) => {
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const { setResults } = useSelectedMovie();
+
   const handleSubmit = async e => {
     e.preventDefault();
     const params = {
@@ -20,7 +21,8 @@ const SearchBar = ({ setMyProfile }) => {
     try {
       setLoading(true);
       const { data } = await tmdb('/search/movie', params);
-      setResults({ header: 'Results', data });
+      setResults({ header: `Showing Results For: ${query}`, data });
+      setQuery('');
       setMyProfile(null);
       setLoading(false);
     } catch (err) {

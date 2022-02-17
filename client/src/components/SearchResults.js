@@ -1,18 +1,31 @@
+import { useEffect } from 'react';
 import { Card } from 'react-bootstrap';
 import { useSelectedMovie } from '../context/SelectContext';
 
 const SearchResults = () => {
-  const { results, setSelectedMovie } = useSelectedMovie();
+  const { results, setSelectedMovie, setResults } = useSelectedMovie();
+
+  useEffect(() => {
+    return () => {
+      setResults(null);
+    };
+  }, []);
+
+  const movieResults = results || JSON.parse(sessionStorage.getItem('popular'));
 
   return (
     <div>
-      {!results.data.total_results ? (
-        <h2 style={{ color: 'white' }}>Sorry, no results found </h2>
+      {!movieResults.data.total_results ? (
+        <h2 className="mt-3" style={{ color: 'white' }}>
+          Sorry, no results found{' '}
+        </h2>
       ) : (
         <>
-          <h2 style={{ color: 'white' }}>{results.header}</h2>
+          <h2 className="my-3" style={{ color: 'white' }}>
+            {movieResults.header}
+          </h2>
           <div className="d-flex align-items-start flex-wrap">
-            {results.data.results?.map((item, index) => {
+            {movieResults.data.results?.map((item, index) => {
               return (
                 <div
                   className="position-relative m-3"

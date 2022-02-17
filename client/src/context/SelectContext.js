@@ -21,6 +21,7 @@ export const SearchProvider = props => {
   useEffect(() => {
     (async () => {
       const { data } = await tmdb('/movie/popular');
+      sessionStorage.setItem('popular', JSON.stringify({ header: 'Popular Now', data }));
       setResults({ header: 'Popular Now', data });
     })();
   }, []);

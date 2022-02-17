@@ -29,11 +29,15 @@ const MyFavorites = () => {
   return (
     <div>
       {totalFavorites.length === 0 ? (
-        <h4>No Movies in Favorites yet</h4>
+        <p className="mt-3" style={{ color: 'white', fontSize: '1.6rem' }}>
+          No Movie added to Favorites yet!
+        </p>
       ) : (
         <>
-          <h2>My Favorites</h2>
-          <Row xs={1} md={5} className="watch-list">
+          <h2 className="my-3" style={{ color: 'white' }}>
+            My Favorites
+          </h2>
+          <Row xs={1} md={5}>
             {totalFavorites.map((item, index) => (
               <Col key={`${item.movie_details[0].imdbID}-${index}`}>
                 <Button variant="outline-danger" title="remove" onClick={() => handleOnClick(item?.movieId)} />

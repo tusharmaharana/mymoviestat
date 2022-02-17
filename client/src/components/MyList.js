@@ -2,10 +2,14 @@ import styled from '@emotion/styled';
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { produce } from 'immer';
+import { useState } from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
 import { useMovieRecord } from '../context/MovieContext';
 import { useSelectedMovie } from '../context/SelectContext';
 import getData from '../hooks/getData';
+import Button from './widgets/Button';
+
+const listStatuses = ['Want To See', 'Watching', 'Seen', 'On Hold'];
 
 const MyList = () => {
   const {
@@ -13,11 +17,13 @@ const MyList = () => {
     actions: { setTotalStatuses }
   } = useMovieRecord();
   const { setSelectedMovie } = useSelectedMovie();
+  const [activeStatus, setActiveStatus] = useState('Want To See');
 
-  const watchList = totalStatuses.filter(current => current?.status === 'Want To See');
-  const watching = totalStatuses.filter(current => current?.status === 'Watching');
-  const seen = totalStatuses.filter(current => current?.status === 'Seen');
-  const onHold = totalStatuses.filter(current => current?.status === 'On Hold');
+  const movieLists = {};
+
+  listStatuses.forEach(status => {
+    movieLists[status] = totalStatuses.filter(movie => movie.status === status);
+  });
 
   const handleOnClick = async (event, movieId) => {
     event.stopPropagation();
@@ -58,44 +64,29 @@ const MyList = () => {
 
   return (
     <div>
-      {totalStatuses.length === 0 ? (
-        <h4>No Movies Added in MyList yet</h4>
-      ) : (
-        <>
-          {watchList.length > 0 && (
-            <>
-              <h4>Watch List</h4>
-              <Row xs={1} md={5} className="watch-list">
-                {watchList.map((item, index) => showMovieList(item, index))}
-              </Row>
-            </>
-          )}
-          {watching.length > 0 && (
-            <>
-              <h4>Watching</h4>
-              <Row xs={1} md={5} className="watching-list">
-                {watching.map((item, index) => showMovieList(item, index))}
-              </Row>
-            </>
-          )}
-          {seen.length > 0 && (
-            <>
-              <h4>Seen</h4>
-              <Row xs={1} md={5} className="seen-list">
-                {seen.map((item, index) => showMovieList(item, index))}
-              </Row>
-            </>
-          )}
-          {onHold.length > 0 && (
-            <>
-              <h4>On Hold</h4>
-              <Row xs={1} md={5} className="onHold-list">
-                {onHold.map((item, index) => showMovieList(item, index))}
-              </Row>
-            </>
-          )}
-        </>
-      )}
+      <div className="my-3">
+        {listStatuses.map(status => (
+          <Button
+            title={status}
+            variant={status === activeStatus ? 'primary' : 'light'}
+            onClick={() => setActiveStatus(status)}
+            className="mr-4"
+            style={{ minWidth: '100px' }}
+          />
+        ))}
+      </div>
+      <div className="mt-5">
+        {movieLists[activeStatus].length > 0 ? (
+          <>
+            <h4>{activeStatus} List</h4>
+            <Row xs={1} md={5}>
+              {movieLists[activeStatus].map((item, index) => showMovieList(item, index))}
+            </Row>
+          </>
+        ) : (
+          <p style={{ color: 'white', fontSize: '1.6rem' }}>No Movie added yet!</p>
+        )}
+      </div>
     </div>
   );
 };

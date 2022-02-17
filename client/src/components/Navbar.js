@@ -32,7 +32,7 @@ const Navbar = props => {
 
   return (
     <Nav className="d-flex justify-content-between">
-      <div className="p-0 d-flex align-items-center">
+      <div className="p-0 d-flex align-items-center" onClick={() => props.setMyProfile('Landing')}>
         <img src="/assets/logo.png" width="30px" alt="MovieStat Logo" />
         <h4 style={{ color: 'white', fontWeight: 700, margin: 0, marginLeft: '10px' }}>MovieStat</h4>
       </div>
