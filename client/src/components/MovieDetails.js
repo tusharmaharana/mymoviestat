@@ -12,7 +12,7 @@ import Loader from './widgets/Loader';
 
 const MovieDetails = props => {
   const { details, setSelectedMovie, setShowMovieModal, showMovieModal } = useSelectedMovie();
-  console.log(details);
+
   const {
     state: { userData },
     actions: { setAuthModalState }
@@ -49,8 +49,8 @@ const MovieDetails = props => {
     if (!!userData) {
       const values = {
         status,
-        movieId: details?.id,
-        movie_details: [details]
+        movieId: details?.id
+        // movie_details: [details]
       };
       try {
         await getData('status/movies', { body: values });

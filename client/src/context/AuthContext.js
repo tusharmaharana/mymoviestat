@@ -70,7 +70,6 @@ export const AuthProvider = props => {
     };
 
     return fetch(`/api/${endpoint}`, config).then(async response => {
-      console.log(response);
       if (response.status === 401) {
         setUserData(null);
         return null;

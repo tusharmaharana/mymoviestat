@@ -44,7 +44,7 @@ export const listSchema = {
       new RegExp(`${StatusEnum['want-to-see']}|${StatusEnum.watching}|${StatusEnum.seen}|${StatusEnum['on-hold']}`)
     )
     .required(),
-  movieId: yup.string().test('validateMongoId', 'Invalid MongoId', IsValidMongoId).required()
+  movieId: yup.number().required()
 };
 
 export const querySchema = {

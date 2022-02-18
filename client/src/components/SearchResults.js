@@ -31,6 +31,7 @@ const SearchResults = () => {
                   className="position-relative m-3"
                   style={{ cursor: 'pointer' }}
                   onClick={() => setSelectedMovie(item)}
+                  key={`${item.id}-${index}`}
                 >
                   <div
                     className="position-absolute pl-2 d-flex align-items-center"
@@ -48,10 +49,7 @@ const SearchResults = () => {
                   >
                     ★ {item.vote_average}
                   </div>
-                  <Card
-                    key={`${item.id}-${index}`}
-                    style={{ width: '250px', minHeight: '450px', background: 'none', border: '3px solid white' }}
-                  >
+                  <Card style={{ width: '250px', minHeight: '450px', background: 'none', border: '3px solid white' }}>
                     <Card.Img
                       variant="top"
                       src={

@@ -41,9 +41,9 @@ const Navbar = props => {
         {userData ? (
           <div className="d-flex align-items-center">
             <p style={{ color: 'white', margin: 0 }}>Hi, {userData?.name.split(' ')[0]}</p>
-            <DropdownButton as={ButtonGroup} id="dropdown-basic-button" title={null}>
+            <DropdownButton as={ButtonGroup} id="dropdown-basic-button" title="">
               {navOptions.map(curr => (
-                <DropdownItem key={curr} onClick={curr.onClick}>
+                <DropdownItem key={curr.title} onClick={curr.onClick}>
                   {curr.title}
                 </DropdownItem>
               ))}
