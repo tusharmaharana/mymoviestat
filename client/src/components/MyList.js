@@ -1,14 +1,16 @@
 import styled from '@emotion/styled';
-import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { produce } from 'immer';
-import { useState } from 'react';
-import { Card, Col, Row } from 'react-bootstrap';
+import { useEffect, useState } from 'react';
+import { Card } from 'react-bootstrap';
+import tmdb from '../api/tmdb';
 import { useMovieRecord } from '../context/MovieContext';
 import { useSelectedMovie } from '../context/SelectContext';
 import getData from '../hooks/getData';
 import SearchResults from './SearchResults';
 import Button from './widgets/Button';
+import Loader from './widgets/Loader';
 
 const listStatuses = ['Want To See', 'Watching', 'Seen', 'On Hold'];
 
@@ -19,12 +21,32 @@ const MyList = () => {
   } = useMovieRecord();
   const { setSelectedMovie } = useSelectedMovie();
   const [activeStatus, setActiveStatus] = useState('Want To See');
+  const [loading, setLoading] = useState(false);
+  const [movieLists, setMovieLists] = useState();
 
-  const movieLists = {};
+  const fetchMovieDetails = async list => {
+    setLoading(true);
+    const promisesArr = list[activeStatus].map(movie => tmdb(`/movie/${movie.movieId}`));
+    const res = await Promise.all(promisesArr);
 
-  listStatuses.forEach(status => {
-    movieLists[status] = totalStatuses.filter(movie => movie.status === status);
-  });
+    setLoading(false);
+    return {
+      ...list,
+      [activeStatus]: list[activeStatus].map((movie, index) => ({ ...movie, movie_details: res[index].data }))
+    };
+  };
+
+  useEffect(() => {
+    (async () => {
+      const newMovieList = listStatuses.reduce((acc, curr) => {
+        acc[curr] = totalStatuses.filter(movie => movie.status === curr);
+        return acc;
+      }, {});
+
+      const listWithDetails = await fetchMovieDetails(newMovieList);
+      setMovieLists({ ...listWithDetails });
+    })();
+  }, [activeStatus, totalStatuses]);
 
   const handleOnClick = async (event, movieId) => {
     event.stopPropagation();
@@ -41,26 +63,54 @@ const MyList = () => {
   };
 
   const showMovieList = (item, index) => {
-    return (
-      <Col key={`${item.movie_details[0].imdbID}-${index}`}>
-        <StyledCard onClick={() => setSelectedMovie(item.movie_details[0])}>
+    const movie = item.movie_details;
+    return movie ? (
+      <div
+        className="position-relative m-3"
+        style={{ cursor: 'pointer' }}
+        onClick={() => setSelectedMovie(movie)}
+        key={`${movie.id}-${index}`}
+      >
+        <div
+          className="position-absolute pl-2 d-flex align-items-center"
+          style={{
+            top: '20px',
+            left: 0,
+            width: '70px',
+            height: '30px',
+            background: 'rgba(0,0,0,0.5)',
+            color: 'white',
+            zIndex: 1,
+            borderTopRightRadius: '20px',
+            borderBottomRightRadius: '20px'
+          }}
+        >
+          ★ {movie.vote_average}
+        </div>
+        <StyledIcon className="mr-2" icon={faTrash} onClick={event => handleOnClick(event, movie?.id)} />
+        <Card style={{ width: '250px', minHeight: '450px', background: 'none', border: '3px solid white' }}>
           <Card.Img
             variant="top"
-            src={item.movie_details[0].poster}
-            style={{ boxShadow: ' inset 0px 0px 20px black' }}
-          />
-          <StyledIcon
-            className="remove-icon"
-            icon={faTimesCircle}
-            onClick={event => handleOnClick(event, item?.movieId)}
+            src={
+              !movie.poster_path
+                ? '/assets/no-image.png'
+                : `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${movie.poster_path}`
+            }
+            style={{ height: '350px', objectFit: 'cover', background: 'white' }}
           />
           <Card.Body>
-            <Card.Title>{item.movie_details[0].title}</Card.Title>
-            <Card.Text>{item.movie_details[0].year}</Card.Text>
+            <Card.Title style={{ color: 'white' }}>{movie.title}</Card.Title>
+            <Card.Text style={{ color: 'white' }}>
+              {movie.release_date ? new Date(movie.release_date).getFullYear() : '---'}
+            </Card.Text>
           </Card.Body>
-        </StyledCard>
-      </Col>
-    );
+        </Card>
+        <div
+          className="position-absolute"
+          style={{ height: '100%', width: '100%', background: 'rgba(0,0,0,0.3)', top: 0, left: 0 }}
+        ></div>
+      </div>
+    ) : null;
   };
 
   return (
@@ -73,17 +123,22 @@ const MyList = () => {
             onClick={() => setActiveStatus(status)}
             className="mr-4"
             style={{ minWidth: '100px' }}
+            key={status}
           />
         ))}
       </div>
       <div className="mt-5">
-        {movieLists[activeStatus].length > 0 ? (
-          <>
-            <h4>{activeStatus} List</h4>
-            <Row xs={1} md={5}>
-              {movieLists[activeStatus].map((item, index) => showMovieList(item, index))}
-            </Row>
-          </>
+        {movieLists?.[activeStatus]?.length > 0 ? (
+          loading ? (
+            <Loader color="white" width={50} />
+          ) : (
+            <>
+              <h4 className="mb-3" style={{ color: 'white' }}>
+                {activeStatus} List
+              </h4>
+              <div className="d-flex align-items-start flex-wrap">{movieLists[activeStatus].map(showMovieList)}</div>
+            </>
+          )
         ) : (
           <>
             <p className="mb-5" style={{ color: 'white', fontSize: '1.6rem' }}>
@@ -97,31 +152,13 @@ const MyList = () => {
   );
 };
 
-const StyledIcon = styled(FontAwesomeIcon)`
+export const StyledIcon = styled(FontAwesomeIcon)`
   position: absolute;
-  font-size: 30px;
   cursor: pointer;
-  color: red;
-  right: 0.3rem;
-  top: -2rem;
-  visibility: hidden;
-  opacity: 0;
-  transition: top 200ms ease-in, opacity 350ms ease-out;
-`;
-
-const StyledCard = styled(Card)`
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-  &:hover {
-    box-shadow: 4px 4px 8px #3d3d3d;
-    transform: scale(1.05);
-  }
-  &:hover .remove-icon {
-    top: 0.3rem;
-    visibility: visible;
-    opacity: 1;
-  }
+  color: white;
+  right: 0px;
+  top: 25px;
+  z-index: 2;
 `;
 
 export default MyList;

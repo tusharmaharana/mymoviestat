@@ -53,5 +53,5 @@ export const querySchema = {
 };
 
 export const idSchema = {
-  id: yup.string().test('validateMongoId', 'Invalid MongoId', IsValidMongoId).required()
+  id: yup.string().required()
 };

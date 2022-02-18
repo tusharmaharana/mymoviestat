@@ -33,11 +33,11 @@ const App = () => {
 
   return (
     <StyledContainer fluid>
-      <div style={{ width: '90%', margin: '0 auto' }}>
+      <div style={{ width: '92%', margin: '0 auto' }}>
         <Row>
           <Navbar setMyProfile={setMyProfile} />
         </Row>
-        <Row>{showComponent()}</Row>
+        {showComponent()}
         <MovieDetails />
         <AuthModal
           show={!!authModalState}
