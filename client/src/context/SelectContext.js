@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import getMovie from '../hooks/getMovie';
 import tmdb from '../api/tmdb';
+import getMovie from '../hooks/getMovie';
 
 const SelectContext = createContext();
 

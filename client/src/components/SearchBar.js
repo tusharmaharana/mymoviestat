@@ -19,6 +19,7 @@ const SearchBar = ({ setMyProfile }) => {
       query
     };
     try {
+      if (!query.length) return;
       setLoading(true);
       const { data } = await tmdb('/search/movie', params);
       setResults({ header: `Showing Results For: ${query}`, data });

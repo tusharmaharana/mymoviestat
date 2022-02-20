@@ -24,18 +24,6 @@ const MyList = () => {
   const [loading, setLoading] = useState(false);
   const [movieLists, setMovieLists] = useState();
 
-  const fetchMovieDetails = async list => {
-    setLoading(true);
-    const promisesArr = list[activeStatus].map(movie => tmdb(`/movie/${movie.movieId}`));
-    const res = await Promise.all(promisesArr);
-
-    setLoading(false);
-    return {
-      ...list,
-      [activeStatus]: list[activeStatus].map((movie, index) => ({ ...movie, movie_details: res[index].data }))
-    };
-  };
-
   useEffect(() => {
     (async () => {
       const newMovieList = listStatuses.reduce((acc, curr) => {
@@ -46,6 +34,18 @@ const MyList = () => {
       const listWithDetails = await fetchMovieDetails(newMovieList);
       setMovieLists({ ...listWithDetails });
     })();
+
+    const fetchMovieDetails = async list => {
+      setLoading(true);
+      const promisesArr = list[activeStatus].map(movie => tmdb(`/movie/${movie.movieId}`));
+      const res = await Promise.all(promisesArr);
+
+      setLoading(false);
+      return {
+        ...list,
+        [activeStatus]: list[activeStatus].map((movie, index) => ({ ...movie, movie_details: res[index].data }))
+      };
+    };
   }, [activeStatus, totalStatuses]);
 
   const handleOnClick = async (event, movieId) => {
@@ -88,7 +88,7 @@ const MyList = () => {
           ★ {movie.vote_average}
         </div>
         <StyledIcon className="mr-2" icon={faTrash} onClick={event => handleOnClick(event, movie?.id)} />
-        <Card style={{ width: '250px', minHeight: '450px', background: 'none', border: '3px solid white' }}>
+        <Card style={{ width: '15rem', background: 'none', border: '3px solid white' }}>
           <Card.Img
             variant="top"
             src={
@@ -98,16 +98,16 @@ const MyList = () => {
             }
             style={{ height: '350px', objectFit: 'cover', background: 'white' }}
           />
-          <Card.Body>
+          {/* <Card.Body>
             <Card.Title style={{ color: 'white' }}>{movie.title}</Card.Title>
             <Card.Text style={{ color: 'white' }}>
               {movie.release_date ? new Date(movie.release_date).getFullYear() : '---'}
             </Card.Text>
-          </Card.Body>
+          </Card.Body> */}
         </Card>
         <div
           className="position-absolute"
-          style={{ height: '100%', width: '100%', background: 'rgba(0,0,0,0.3)', top: 0, left: 0 }}
+          style={{ height: '100%', width: '100%', background: 'rgba(0,0,0,0.15)', top: 0, left: 0 }}
         ></div>
       </div>
     ) : null;

@@ -25,6 +25,7 @@ const App = () => {
       case 'My Favorites':
         return <MyFavorites />;
       default:
+        console.log('hey yo');
         return <Landing />;
     }
   };
@@ -50,10 +51,10 @@ const App = () => {
 };
 
 const StyledContainer = styled(Container)`
- min-height: 100vh;
-  background: #141E30;
-  background: -webkit-linear-gradient(to right, #243B55, #141E30);
-  background: 'linear-gradient(to right, #243B55, #141E30)
+  min-height: 100vh;
+  background: #141e30 !important;
+  /* background: -webkit-linear-gradient(to right, #243B55, #141E30);
+  background: 'linear-gradient(to right, #243B55, #141E30) */
 `;
 
 export default App;

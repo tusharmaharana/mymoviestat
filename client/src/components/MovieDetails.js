@@ -119,7 +119,8 @@ const MovieDetails = props => {
             style={{
               top: 0,
               left: 0,
-              background: 'linear-gradient(to right, rgba(29,43,100, 0.8), rgba(248,205,218, 0.8))'
+              // background: 'linear-gradient(to right, rgba(29,43,100, 0.8), rgba(248,205,218, 0.8))'
+              background: 'rgba(20, 30, 48, 0.8)'
             }}
           ></div>
           <Row className="d-flex align-items-center h-100">
@@ -158,8 +159,8 @@ const MovieDetails = props => {
               </div>
               <div className="mb-3" style={{ maxWidth: '60%' }}>
                 <h5>Director</h5>
-                <p>{details?.crew.find(member => member.job === 'Director').name}</p>
-                <h5>Cast</h5>
+                <p>{details?.crew.find(member => member.job === 'Director')?.name}</p>
+                <h5>Starring</h5>
                 <p>
                   {details?.cast
                     .slice(0, 5)

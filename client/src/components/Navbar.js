@@ -30,6 +30,8 @@ const Navbar = props => {
     }
   ];
 
+  const profileName = `Hi, ${userData?.name.split(' ')[0]}`;
+
   return (
     <Nav className="d-flex justify-content-between">
       <div
@@ -44,8 +46,7 @@ const Navbar = props => {
       <div className="d-flex justify-content-end">
         {userData ? (
           <div className="d-flex align-items-center">
-            <p style={{ color: 'white', margin: 0 }}>Hi, {userData?.name.split(' ')[0]}</p>
-            <DropdownButton as={ButtonGroup} id="dropdown-basic-button" title="">
+            <DropdownButton as={ButtonGroup} id="dropdown-basic-button" title={profileName}>
               {navOptions.map(curr => (
                 <DropdownItem key={curr.title} onClick={curr.onClick}>
                   {curr.title}
