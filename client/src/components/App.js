@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState } from 'react';
 import { Container, Row } from 'react-bootstrap';
@@ -10,15 +11,12 @@ import MyList from './MyList';
 import Navbar from './Navbar';
 
 const App = () => {
-  const [searchQuery, setSearchQuery] = useState(null);
   const [myProfile, setMyProfile] = useState(null);
 
   const {
     state: { userData, authModalState },
     actions: { setAuthModalState }
   } = useAuth();
-
-  // const { details } = useSelectedMovie();
 
   const showComponent = () => {
     switch (myProfile) {
@@ -34,19 +32,28 @@ const App = () => {
   if (userData === undefined) return <div>Loading...</div>;
 
   return (
-    <Container>
-      <Row>
-        <Navbar setSearchQuery={setSearchQuery} setMyProfile={setMyProfile} />
-      </Row>
-      <Row>{showComponent()}</Row>
-      {<MovieDetails />}
-      <AuthModal
-        show={!!authModalState}
-        onHide={() => setAuthModalState(null)}
-        signup={authModalState === 'signUp' ? true : false}
-      />
-    </Container>
+    <StyledContainer fluid>
+      <div style={{ width: '92%', margin: '0 auto' }}>
+        <Row>
+          <Navbar setMyProfile={setMyProfile} />
+        </Row>
+        {showComponent()}
+        <MovieDetails />
+        <AuthModal
+          show={!!authModalState}
+          onHide={() => setAuthModalState(null)}
+          signup={authModalState === 'signUp' ? true : false}
+        />
+      </div>
+    </StyledContainer>
   );
 };
+
+const StyledContainer = styled(Container)`
+ min-height: 100vh;
+  background: #141E30;
+  background: -webkit-linear-gradient(to right, #243B55, #141E30);
+  background: 'linear-gradient(to right, #243B55, #141E30)
+`;
 
 export default App;

@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import './index.css';
 import App from './components/App';
 import { AuthProvider } from './context/AuthContext';
 import { MovieProvider } from './context/MovieContext';

@@ -4,58 +4,70 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import { Form } from 'react-bootstrap';
-import omdb from '../api/omdb';
+import tmdb from '../api/tmdb';
 import { useSelectedMovie } from '../context/SelectContext';
+import Loader from './widgets/Loader';
 
-const SearchBar = ({ setSearchQuery, setMyProfile }) => {
+const SearchBar = ({ setMyProfile }) => {
   const [query, setQuery] = useState('');
+  const [loading, setLoading] = useState(false);
   const { setResults } = useSelectedMovie();
+
   const handleSubmit = async e => {
     e.preventDefault();
-    setSearchQuery(query);
     const params = {
-      s: query
+      query
     };
     try {
-      const { data } = await omdb(params);
-      setResults(data);
+      setLoading(true);
+      const { data } = await tmdb('/search/movie', params);
+      setResults({ header: `Showing Results For: ${query}`, data });
+      setQuery('');
       setMyProfile(null);
+      setLoading(false);
     } catch (err) {
       console.error(err);
     }
   };
 
   return (
-    <Form
-      className="border border-dark mr-2 d-flex align-items-center"
-      style={{ width: '300px' }}
-      onSubmit={handleSubmit}
-    >
-      <button className="border-0 p-0 ml-2 mt-2" style={{ backgroundColor: 'inherit' }}>
-        <FontAwesomeIcon css={iconStyle} icon={faSearch} />
-      </button>
+    <Form className="border border-dark mr-2 d-flex align-items-center" css={formStyle} onSubmit={handleSubmit}>
       <Form.Control
         placeholder="Quick Search"
         css={inputStyle}
         value={query}
         onChange={e => setQuery(e.target.value)}
       />
+      <button className="border-0 p-0 mr-3 mt-1" style={{ backgroundColor: 'inherit', color: 'white' }}>
+        {loading ? <Loader color="white" width={20} /> : <FontAwesomeIcon css={iconStyle} icon={faSearch} />}
+      </button>
     </Form>
   );
 };
 
+const formStyle = css`
+  width: 500px;
+  background: #181818;
+  border-radius: 10px;
+  border: none !important;
+  padding-left: 20px;
+`;
+
 const iconStyle = css`
-  font-size: 20px;
+  font-size: 16px;
 `;
 
 const inputStyle = css`
-  border-radius: 20px;
+  background: #181818;
+  color: white;
   border: none;
   transition: none;
   padding-top: 0px;
   padding-bottom: 0px;
   &:focus {
     box-shadow: none;
+    background: #181818;
+    color: white;
   }
 `;
 

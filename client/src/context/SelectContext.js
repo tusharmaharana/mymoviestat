@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import getMovie from '../hooks/getMovie';
+import tmdb from '../api/tmdb';
 
 const SelectContext = createContext();
 
@@ -16,6 +17,14 @@ export const SearchProvider = props => {
   const [details, setDetails] = useState(undefined);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [showMovieModal, setShowMovieModal] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await tmdb('/movie/popular');
+      sessionStorage.setItem('popular', JSON.stringify({ header: 'Popular Now', data }));
+      setResults({ header: 'Popular Now', data });
+    })();
+  }, []);
 
   useEffect(() => {
     const func = async () => {

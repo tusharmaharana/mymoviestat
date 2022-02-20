@@ -1,7 +1,7 @@
 import { Field, Form, Formik } from 'formik';
 import React from 'react';
 import * as Yup from 'yup';
-import Button from '../widgets/Button';
+import { StyledButton } from '../widgets/Button';
 
 const AuthForm = props => {
   const { isSignUp, onSubmit, ...restProps } = props;
@@ -40,7 +40,12 @@ const AuthForm = props => {
             autoComplete={isSignUp ? 'new-password' : 'password'}
             component={MyTextInput}
           />
-          <Button disabled={isSubmitting} type="submit" title={isSignUp ? 'Sign Up' : 'Sign In'} />
+          <StyledButton
+            className="my-4"
+            disabled={isSubmitting}
+            type="submit"
+            title={isSignUp ? 'Sign Up' : 'Sign In'}
+          />
         </Form>
       )}
     </Formik>
@@ -49,11 +54,23 @@ const AuthForm = props => {
 
 const MyTextInput = props => {
   const { field, form } = props;
-  // console.log(field, '\n', form, '\n');
   const error = form.touched[field.name] && form.errors[field.name] ? form.errors[field.name] : null;
   return (
     <div className="d-flex flex-column my-3">
-      <input {...field} {...props} className={error ? 'border-danger' : ''} />
+      <input
+        {...field}
+        {...props}
+        className={error ? 'border-danger' : ''}
+        style={{
+          width: '350px',
+          fontSize: '1.2rem',
+          padding: '10px',
+          borderRadius: '5px',
+          border: '1px solid #FFFFFF',
+          backgroundColor: '#000000',
+          color: '#ffffff'
+        }}
+      />
       <div className={error ? 'd-block text-danger' : 'd-none'}>{error}</div>
     </div>
   );

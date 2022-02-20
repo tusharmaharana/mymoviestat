@@ -8,7 +8,7 @@ export const Status = model(
       type: String,
       enum: [StatusEnum.watching, StatusEnum['want-to-see'], StatusEnum.seen, StatusEnum['on-hold']]
     },
-    movieId: { type: Schema.Types.ObjectId, ref: 'Movie', required: true },
+    movieId: { type: Number, required: true },
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true }
   })
 );

@@ -1,7 +1,7 @@
 {
   "name": "mymoviestat-backend",
   "version": "1.0.0",
-  "description": "API for My Movie Status",
+  "description": "API for My Movie Stat",
   "main": "server/index.js",
   "private": true,
   "scripts": {
