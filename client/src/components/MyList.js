@@ -25,16 +25,6 @@ const MyList = () => {
   const [movieLists, setMovieLists] = useState();
 
   useEffect(() => {
-    (async () => {
-      const newMovieList = listStatuses.reduce((acc, curr) => {
-        acc[curr] = totalStatuses.filter(movie => movie.status === curr);
-        return acc;
-      }, {});
-
-      const listWithDetails = await fetchMovieDetails(newMovieList);
-      setMovieLists({ ...listWithDetails });
-    })();
-
     const fetchMovieDetails = async list => {
       setLoading(true);
       const promisesArr = list[activeStatus].map(movie => tmdb(`/movie/${movie.movieId}`));
@@ -46,6 +36,16 @@ const MyList = () => {
         [activeStatus]: list[activeStatus].map((movie, index) => ({ ...movie, movie_details: res[index].data }))
       };
     };
+
+    (async () => {
+      const newMovieList = listStatuses.reduce((acc, curr) => {
+        acc[curr] = totalStatuses.filter(movie => movie.status === curr);
+        return acc;
+      }, {});
+
+      const listWithDetails = await fetchMovieDetails(newMovieList);
+      setMovieLists({ ...listWithDetails });
+    })();
   }, [activeStatus, totalStatuses]);
 
   const handleOnClick = async (event, movieId) => {

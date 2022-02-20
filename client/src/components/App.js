@@ -25,7 +25,6 @@ const App = () => {
       case 'My Favorites':
         return <MyFavorites />;
       default:
-        console.log('hey yo');
         return <Landing />;
     }
   };

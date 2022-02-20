@@ -4,6 +4,7 @@ import React from 'react';
 import { ButtonGroup, DropdownButton } from 'react-bootstrap';
 import DropdownItem from 'react-bootstrap/esm/DropdownItem';
 import { useAuth } from '../context/AuthContext';
+import { useSelectedMovie } from '../context/SelectContext';
 import SearchBar from './SearchBar';
 import { StyledButton } from './widgets/Button';
 
@@ -12,6 +13,8 @@ const Navbar = props => {
     state: { userData },
     actions: { signOut, setAuthModalState }
   } = useAuth();
+
+  const { setResults } = useSelectedMovie();
 
   const navOptions = [
     {
@@ -37,7 +40,10 @@ const Navbar = props => {
       <div
         className="p-0 d-flex align-items-center"
         style={{ cursor: 'pointer' }}
-        onClick={() => props.setMyProfile('Landing')}
+        onClick={() => {
+          setResults('');
+          props.setMyProfile('Landing');
+        }}
       >
         <img src="/assets/logo.png" width="30px" alt="MovieStat Logo" />
         <h4 style={{ color: 'white', fontWeight: 700, margin: 0, marginLeft: '10px' }}>MovieStat</h4>
