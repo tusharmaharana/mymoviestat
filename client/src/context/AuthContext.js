@@ -69,7 +69,7 @@ export const AuthProvider = props => {
       ...customConfig
     };
 
-    return fetch(`/api/${endpoint}`, config).then(async response => {
+    return fetch(`${process.env.REACT_APP_SERVER}/api/${endpoint}`, config).then(async response => {
       if (response.status === 401) {
         setUserData(null);
         return null;
