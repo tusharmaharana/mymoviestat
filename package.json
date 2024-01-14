@@ -9,10 +9,9 @@
     "build-server": "babel -d ./build ./server -s",
     "build": "npm run clean && npm run build-server",
     "start": "npm run build && node ./build/index.js",
-    "dev": "nodemon -r dotenv/config --exec babel-node server/index.js",
+    "dev": "yarn && nodemon -r dotenv/config --exec babel-node server/index.js",
     "start-client": "cd client && yarn start",
-    "reset": "rm -rf node_modules && yarn",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm i --prefix client && npm run build --prefix client"
+    "reset": "rm -rf node_modules && yarn"
   },
   "keywords": [
     "movie",
@@ -23,12 +22,13 @@
   ],
   "dependencies": {
     "@babel/cli": "^7.11.6",
-    "@babel/runtime": "^7.15.4",
     "@babel/plugin-transform-runtime": "^7.15.0",
     "@babel/preset-env": "^7.11.5",
+    "@babel/runtime": "^7.15.4",
     "bcrypt": "^5.0.0",
     "caniuse-lite": "^1.0.30001252",
     "cookie-session": "^1.4.0",
+    "core-js": "^3.35.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "lodash": "^4.17.20",
@@ -37,6 +37,7 @@
     "passport-facebook": "^3.0.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
+    "regenerator-runtime": "^0.14.1",
     "yup": "^0.29.3"
   },
   "devDependencies": {

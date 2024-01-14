@@ -13,7 +13,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: 'http://localhost:3000',
+    origin: keys.clientUri,
     credentials: true
   })
 );
@@ -67,13 +67,14 @@ app.use('/api/status/movies', ensureAuth, statusRouter);
 app.use('/api/favorite/movies', ensureAuth, favoriteRouter);
 
 //PRODUCTION ROUTE
-if (process.env.NODE_ENV === 'production') {
-  const root = path.join(__dirname, '..', 'client', 'build');
+// if (process.env.NODE_ENV === 'production') {
+//   const root = path.join(__dirname, '..', 'client', 'build');
 
-  app.use(express.static(root));
-  app.get('*', (req, res) => {
-    res.sendFile('index.html', { root });
-  });
-}
+//   app.use(express.static(root));
+//   app.get('*', (req, res) => {
+//     res.sendFile('index.html', { root });
+//   });
+// }
+// "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm i --prefix client && npm run build --prefix client"
 
 app.listen(keys.port, () => console.log(`Listening on PORT ${keys.port}`));
