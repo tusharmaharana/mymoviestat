@@ -24,12 +24,12 @@ const SearchResults = () => {
           <h2 className="m-3" style={{ color: 'white' }}>
             {movieResults?.header}
           </h2>
-          <div className="d-flex align-items-start flex-wrap">
+          <div className="d-flex flex-wrap">
             {movieResults?.data.results?.map((item, index) => {
               return (
                 <div
                   className="position-relative m-3"
-                  style={{ cursor: 'pointer' }}
+                  style={{ cursor: 'pointer', flex: '1 1 10rem', minWidth: '15rem', maxWidth: '25rem' }}
                   onClick={() => setSelectedMovie(item)}
                   key={`${item.id}-${index}`}
                 >
@@ -49,7 +49,7 @@ const SearchResults = () => {
                   >
                     ★ {item.vote_average}
                   </div>
-                  <Card style={{ width: '15rem', background: 'none', border: '3px solid white' }}>
+                  <Card style={{ background: 'none', border: '3px solid white' }}>
                     <Card.Img
                       // variant="top"
                       src={
@@ -57,7 +57,6 @@ const SearchResults = () => {
                           ? '/assets/no-image.png'
                           : `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${item.poster_path}`
                       }
-                      style={{ height: '350px', objectFit: 'cover', background: 'white' }}
                     />
                     {/* <Card.Body>
                       <Card.Title style={{ color: 'white' }}>{item.title}</Card.Title>
